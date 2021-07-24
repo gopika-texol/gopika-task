@@ -15,7 +15,7 @@ class InstaHome extends StatelessWidget {
     title: SizedBox(
         height: 35.0,
         child: Align(
-            alignment: Alignment.topLeft,
+               alignment: Alignment.topLeft,
             child: Image.asset("assets/images/insta_logo.png"))),
     actions: <Widget>[
       Padding(
