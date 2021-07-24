@@ -241,40 +241,41 @@ class _SingleListItemState extends State<SingleListItem> {
             //   style: TextStyle(fontWeight: FontWeight.bold),
             // ),
             ),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(16.0, 16.0, 0.0, 8.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              new Container(
-                height: 40.0,
-                width: 40.0,
-                decoration: new BoxDecoration(
-                  shape: BoxShape.circle,
-                  image: new DecorationImage(
-                      fit: BoxFit.fill,
-                      image: new NetworkImage(
-                          "https://pbs.twimg.com/profile_images/916384996092448768/PF1TSFOE_400x400.jpg")),
-                ),
-              ),
-              new SizedBox(
-                width: 10.0,
-              ),
-              Expanded(
-                child: new TextField(
-                  decoration: new InputDecoration(
-                    border: InputBorder.none,
-                    hintText: "Add a comment...",
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          child: Text("1 Day Ago", style: TextStyle(color: Colors.grey)),
-        )
+            SizedBox(height: 10,),
+        // Padding(
+        //   padding: const EdgeInsets.fromLTRB(16.0, 16.0, 0.0, 8.0),
+        //   child: Row(
+        //     mainAxisAlignment: MainAxisAlignment.start,
+        //     children: <Widget>[
+        //       new Container(
+        //         height: 40.0,
+        //         width: 40.0,
+        //         decoration: new BoxDecoration(
+        //           shape: BoxShape.circle,
+        //           image: new DecorationImage(
+        //               fit: BoxFit.fill,
+        //               image: new NetworkImage(
+        //                   "https://pbs.twimg.com/profile_images/916384996092448768/PF1TSFOE_400x400.jpg")),
+        //         ),
+        //       ),
+        //       new SizedBox(
+        //         width: 10.0,
+        //       ),
+        //       Expanded(
+        //         child: new TextField(
+        //           decoration: new InputDecoration(
+        //             border: InputBorder.none,
+        //             hintText: "Add a comment...",
+        //           ),
+        //         ),
+        //       ),
+        //     ],
+        //   ),
+        // ),
+        // Padding(
+        //   padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        //   child: Text("1 Day Ago", style: TextStyle(color: Colors.grey)),
+        // )
       ],
     );
   }
