@@ -8,7 +8,10 @@ class InstaHome extends StatelessWidget {
   final topBar = new AppBar(
     backgroundColor: new Color(0xfff8faf8),
     elevation: 1.0,
-    leading: new Icon(Icons.camera_alt_outlined,size: 30,),
+    leading: new Icon(
+      Icons.camera_alt_outlined,
+      size: 30,
+    ),
     title: SizedBox(
         height: 35.0,
         child: Align(
