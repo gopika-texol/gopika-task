@@ -1,6 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:gpbproj/services/sharedPreferences.dart';
+import 'package:gpbproj/staticClasses.dart';
 
 import 'instastories.dart';
 import 'models/postmodel.dart';
@@ -13,6 +15,12 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   String url =
       "https://hiit.ria.rocks/videos_api/cdn/com.rstream.crafts?versionCode=40&lurl=Canvas%20painting%20ideas";
+  List<String> bookMarkedList = [];
+  @override
+  void initState() {
+    SharedPrefernceClass.getBookmark().then((value) => bookMarkedList = value);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,16 +52,26 @@ class _MyHomePageState extends State<MyHomePage> {
                             '404 server not found ${error.response!.statusCode}';
                       return Text('Error: ${message}');
                     }
-                    List<PostModel> postList = [];
-                    Response response = snapshot.data as Response;
-                    postList = List.generate(response.data!.length,
-                        (index) => PostModel.fromJson(response.data![index]));
 
+                    Response response = snapshot.data as Response;
+                    PostModelClass.postList = List.generate(
+                        response.data!.length,
+                        (index) => PostModel.fromJson(response.data![index]));
+                    bookMarkedList.forEach((element) {
+                      PostModelClass.postList
+                          .firstWhere((post) => post.id == element, orElse: ()=>PostModel(
+                            id: "",
+                            channelname: "",
+                            
+                            bookmarked: false, highThumbnail: '', lowThumbnail: '', mediumThumbnail: '', title: ''))
+                          .bookmarked = true;
+                    });
                     return Expanded(
                         child: ListView.builder(
-                      itemCount: postList.length,
+                      itemCount: PostModelClass.postList.length,
                       itemBuilder: (BuildContext context, int index) {
-                        return SingleListItem(postModel: postList[index]);
+                        return SingleListItem(
+                            postModel: PostModelClass.postList[index]);
                       },
                     ));
                 }
@@ -98,11 +116,9 @@ class _SingleListItemState extends State<SingleListItem> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
         Padding(
-          padding: const EdgeInsets.fromLTRB(
-              16.0, 16.0, 8.0, 16.0),
+          padding: const EdgeInsets.fromLTRB(16.0, 16.0, 8.0, 16.0),
           child: Row(
-            mainAxisAlignment:
-                MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Row(
                 children: <Widget>[
@@ -113,9 +129,8 @@ class _SingleListItemState extends State<SingleListItem> {
                       shape: BoxShape.circle,
                       image: new DecorationImage(
                           fit: BoxFit.fill,
-                          image: new NetworkImage(
-                              widget.postModel
-                                  .lowThumbnail)),
+                          image:
+                              new NetworkImage(widget.postModel.lowThumbnail)),
                     ),
                   ),
                   new SizedBox(
@@ -123,8 +138,7 @@ class _SingleListItemState extends State<SingleListItem> {
                   ),
                   new Text(
                     widget.postModel.channelname,
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold),
+                    style: TextStyle(fontWeight: FontWeight.bold),
                   )
                 ],
               ),
@@ -145,12 +159,10 @@ class _SingleListItemState extends State<SingleListItem> {
         Padding(
           padding: const EdgeInsets.all(16.0),
           child: Row(
-            mainAxisAlignment:
-                MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               new Row(
-                mainAxisAlignment:
-                    MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Icon(
                     FontAwesomeIcons.heart,
@@ -173,16 +185,26 @@ class _SingleListItemState extends State<SingleListItem> {
                   ),
                 ],
               ),
-              new Icon(
-                FontAwesomeIcons.bookmark,
-                size: 30,
-              )
+              IconButton(
+                onPressed: () async {
+                  print("bookmark");
+                  setState(() {
+                    widget.postModel.bookmarked = !widget.postModel.bookmarked;
+                  });
+                  await SharedPrefernceClass.saveBookmark();
+                },
+                icon: new Icon(
+                  widget.postModel.bookmarked
+                      ? FontAwesomeIcons.solidBookmark
+                      : FontAwesomeIcons.bookmark,
+                  size: 30,
+                ),
+              ),
             ],
           ),
         ),
         Padding(
-            padding:
-                const EdgeInsets.only(left: 5.0, right: 15),
+            padding: const EdgeInsets.only(left: 5.0, right: 15),
             child: Row(
               children: [
                 Expanded(
@@ -190,13 +212,10 @@ class _SingleListItemState extends State<SingleListItem> {
                       maxLines: widget.postModel.maxLines,
                       text: TextSpan(children: [
                         TextSpan(
-                            text: widget.postModel
-                                    .channelname +
-                                " ",
+                            text: widget.postModel.channelname + " ",
                             style: TextStyle(
                                 color: Colors.black,
-                                fontWeight:
-                                    FontWeight.bold)),
+                                fontWeight: FontWeight.bold)),
                         TextSpan(
                             text: widget.postModel.title,
                             style: TextStyle(
@@ -206,12 +225,11 @@ class _SingleListItemState extends State<SingleListItem> {
                 ),
                 GestureDetector(
                   onTap: () {
-                                        setState(() {
-                                         widget.postModel.maxLines = 10;
-                                        });
-                                      },
-                  child: 
-                  Text(" More",
+                    setState(() {
+                      widget.postModel.maxLines = 10;
+                    });
+                  },
+                  child: Text(" More",
                       style: TextStyle(
                         color: Colors.grey,
                       )),
@@ -224,8 +242,7 @@ class _SingleListItemState extends State<SingleListItem> {
             // ),
             ),
         Padding(
-          padding: const EdgeInsets.fromLTRB(
-              16.0, 16.0, 0.0, 8.0),
+          padding: const EdgeInsets.fromLTRB(16.0, 16.0, 0.0, 8.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
@@ -255,10 +272,8 @@ class _SingleListItemState extends State<SingleListItem> {
           ),
         ),
         Padding(
-          padding:
-              const EdgeInsets.symmetric(horizontal: 16.0),
-          child: Text("1 Day Ago",
-              style: TextStyle(color: Colors.grey)),
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: Text("1 Day Ago", style: TextStyle(color: Colors.grey)),
         )
       ],
     );

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class PostModel {
   late String id;
   late String channelname;
@@ -5,7 +7,8 @@ class PostModel {
   late String highThumbnail;
   late String lowThumbnail;
   late String mediumThumbnail;
-   int maxLines = 1;
+  int maxLines = 1;
+  bool bookmarked = false;
 
   PostModel(
       {required this.id,
@@ -14,8 +17,8 @@ class PostModel {
       required this.highThumbnail,
       required this.lowThumbnail,
       required this.mediumThumbnail,
-       this.maxLines:1
-    });
+      this.maxLines: 1,
+      this.bookmarked: false});
 
   PostModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -36,4 +39,6 @@ class PostModel {
     data['medium thumbnail'] = this.mediumThumbnail;
     return data;
   }
+
+  
 }

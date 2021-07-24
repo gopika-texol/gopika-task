@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:gpbproj/bookmarkspage.dart';
 
-import 'instabody.dart';
 import 'newscreen.dart';
 
 class InstaHome extends StatelessWidget {
@@ -15,7 +15,7 @@ class InstaHome extends StatelessWidget {
     title: SizedBox(
         height: 35.0,
         child: Align(
-               alignment: Alignment.topLeft,
+            alignment: Alignment.topLeft,
             child: Image.asset("assets/images/insta_logo.png"))),
     actions: <Widget>[
       Padding(
@@ -49,10 +49,15 @@ class InstaHome extends StatelessWidget {
                   onPressed: () {},
                 ),
                 new IconButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => BookMarksPage()),
+                    );
+                  },
                   icon: Icon(
-                    Icons.search,
+                    FontAwesomeIcons.bookmark,
                   ),
-                  onPressed: null,
                 ),
                 new IconButton(
                   icon: Icon(
