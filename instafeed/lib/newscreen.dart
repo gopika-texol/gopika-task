@@ -1,10 +1,12 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
 import 'package:gpbproj/services/sharedPreferences.dart';
 import 'package:gpbproj/staticClasses.dart';
-
-import 'instastories.dart';
+import 'commentscreen.dart';
 import 'models/postmodel.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -15,6 +17,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   String url =
       "https://hiit.ria.rocks/videos_api/cdn/com.rstream.crafts?versionCode=40&lurl=Canvas%20painting%20ideas";
+
   List<String> bookMarkedList = [];
   @override
   void initState() {
@@ -59,11 +62,15 @@ class _MyHomePageState extends State<MyHomePage> {
                         (index) => PostModel.fromJson(response.data![index]));
                     bookMarkedList.forEach((element) {
                       PostModelClass.postList
-                          .firstWhere((post) => post.id == element, orElse: ()=>PostModel(
-                            id: "",
-                            channelname: "",
-                            
-                            bookmarked: false, highThumbnail: '', lowThumbnail: '', mediumThumbnail: '', title: ''))
+                          .firstWhere((post) => post.id == element,
+                              orElse: () => PostModel(
+                                  id: "",
+                                  channelname: "",
+                                  bookmarked: false,
+                                  highThumbnail: '',
+                                  lowThumbnail: '',
+                                  mediumThumbnail: '',
+                                  title: ''))
                           .bookmarked = true;
                     });
                     return Expanded(
@@ -80,7 +87,6 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
-      // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 
@@ -172,9 +178,18 @@ class _SingleListItemState extends State<SingleListItem> {
                   new SizedBox(
                     width: 16.0,
                   ),
-                  new Icon(
-                    FontAwesomeIcons.comment,
-                    size: 30,
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => CommentScreen()),
+                      );
+                    },
+                    child: new Icon(
+                      FontAwesomeIcons.comment,
+                      size: 30,
+                    ),
                   ),
                   new SizedBox(
                     width: 16.0,
@@ -235,47 +250,8 @@ class _SingleListItemState extends State<SingleListItem> {
                       )),
                 )
               ],
-            )
-            //  Text(
-            //   "Liked by pawankumar, pk and 528,331 others",
-            //   style: TextStyle(fontWeight: FontWeight.bold),
-            // ),
-            ),
-            SizedBox(height: 10,),
-        // Padding(
-        //   padding: const EdgeInsets.fromLTRB(16.0, 16.0, 0.0, 8.0),
-        //   child: Row(
-        //     mainAxisAlignment: MainAxisAlignment.start,
-        //     children: <Widget>[
-        //       new Container(
-        //         height: 40.0,
-        //         width: 40.0,
-        //         decoration: new BoxDecoration(
-        //           shape: BoxShape.circle,
-        //           image: new DecorationImage(
-        //               fit: BoxFit.fill,
-        //               image: new NetworkImage(
-        //                   "https://pbs.twimg.com/profile_images/916384996092448768/PF1TSFOE_400x400.jpg")),
-        //         ),
-        //       ),
-        //       new SizedBox(
-        //         width: 10.0,
-        //       ),
-        //       Expanded(
-        //         child: new TextField(
-        //           decoration: new InputDecoration(
-        //             border: InputBorder.none,
-        //             hintText: "Add a comment...",
-        //           ),
-        //         ),
-        //       ),
-        //     ],
-        //   ),
-        // ),
-        // Padding(
-        //   padding: const EdgeInsets.symmetric(horizontal: 16.0),
-        //   child: Text("1 Day Ago", style: TextStyle(color: Colors.grey)),
-        // )
+            )),
+        SizedBox(height: 10),
       ],
     );
   }
